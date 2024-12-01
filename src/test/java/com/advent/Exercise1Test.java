@@ -46,16 +46,14 @@ public class Exercise1Test {
     }
 
     private static List<Integer> getRightListFromFile() throws IOException {
-        List<Integer> right = Files.readAllLines(Path.of("src/test/resources/exercise1/right.txt")).stream()
+        return Files.readAllLines(Path.of("src/test/resources/exercise1/right.txt")).stream()
                 .map(Integer::valueOf)
                 .toList();
-        return right;
     }
 
     private static List<Integer> getLeftListFromFile() throws IOException {
-        List<Integer> left = Files.readAllLines(Path.of("src/test/resources/exercise1/left.txt")).stream()
+        return Files.readAllLines(Path.of("src/test/resources/exercise1/left.txt")).stream()
                 .map(Integer::valueOf)
                 .toList();
-        return left;
     }
 }
