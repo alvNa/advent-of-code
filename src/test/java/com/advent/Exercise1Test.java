@@ -9,10 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public class Exercise1Test {
+class Exercise1Test {
 
     @Test
-    public void calcDistanceTest(){
+    void calcDistanceTest(){
         List<Integer> left = List.of(3,4,2,1,3,3);
         List<Integer> right = List.of(4,3,5,3,9,3);
         var result = Exercise1.totalDistance(left, right);
@@ -20,7 +20,7 @@ public class Exercise1Test {
     }
 
     @Test
-    public void calcDistanceTestFromFile() throws IOException {
+    void calcDistanceTestFromFile() throws IOException {
         List<Integer> left = getLeftListFromFile();
         List<Integer> right = getRightListFromFile();
 

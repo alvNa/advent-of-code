@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Exercise1 {
+
+public final class Exercise1 {
 
     public static int totalDistance(List<Integer> left, List<Integer> right){
 
