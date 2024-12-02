@@ -15,4 +15,12 @@ class Exercise2Test {
         var numReportSave = Exercise2.numReportsSave(rowList);
         Assertions.assertEquals(2, numReportSave);
     }
+
+    @Test
+    void numReportsSaveLargeExampleTest() throws IOException {
+        var rowList = getRowIntListFromFile("src/test/resources/exercise2/list-large.csv");
+        var numReportSave = Exercise2.numReportsSave(rowList);
+        Assertions.assertTrue(numReportSave >0);
+        //557 too high
+    }
 }
