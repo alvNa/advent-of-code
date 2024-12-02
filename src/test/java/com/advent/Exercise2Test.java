@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import lombok.extern.slf4j.Slf4j;
-
 import static com.advent.util.FileUtils.getRowIntListFromFile;
 
-@Slf4j
+
 class Exercise2Test {
 
     @Test
