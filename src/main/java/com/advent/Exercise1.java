@@ -5,8 +5,10 @@ import com.google.common.collect.Streams;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 
-public class Exercise1 {
+@UtilityClass
+public final class Exercise1 {
 
     public static int totalDistance(List<Integer> left, List<Integer> right){
 

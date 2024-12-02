@@ -1,18 +1,17 @@
 package com.advent;
 
 
+import com.advent.util.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
-public class Exercise1Test {
+class Exercise1Test {
 
     @Test
-    public void calcDistanceTest(){
+    void calcDistanceTest(){
         List<Integer> left = List.of(3,4,2,1,3,3);
         List<Integer> right = List.of(4,3,5,3,9,3);
         var result = Exercise1.totalDistance(left, right);
@@ -20,16 +19,17 @@ public class Exercise1Test {
     }
 
     @Test
-    public void calcDistanceTestFromFile() throws IOException {
-        List<Integer> left = getLeftListFromFile();
-        List<Integer> right = getRightListFromFile();
+    void calcDistanceTestFromFile() throws IOException {
+        List<Integer> left = FileUtils.getIntListFromFile("src/test/resources/exercise1/left.txt");
+        List<Integer> right = FileUtils.getIntListFromFile("src/test/resources/exercise1/right.txt");
 
         var result = Exercise1.totalDistance(left, right);
+        System.out.println("Total Distance: " + result);
         Assertions.assertTrue(result>0);
     }
 
     @Test
-    public void calcSimilarityTest(){
+    void calcSimilarityTest(){
         List<Integer> left = List.of(3,4,2,1,3,3);
         List<Integer> right = List.of(4,3,5,3,9,3);
         var result = Exercise1.totalSimilarity(left, right);
@@ -37,23 +37,12 @@ public class Exercise1Test {
     }
 
     @Test
-    public void calcDistancealcSimilarityTestFromFile() throws IOException {
-        List<Integer> left = getLeftListFromFile();
-        List<Integer> right = getRightListFromFile();
+    void calcDistanceCalcSimilarityTestFromFile() throws IOException {
+        List<Integer> left = FileUtils.getIntListFromFile("src/test/resources/exercise1/left.txt");
+        List<Integer> right = FileUtils.getIntListFromFile("src/test/resources/exercise1/right.txt");
 
         var result = Exercise1.totalSimilarity(left, right);
+        System.out.println("Similarity: " + result);
         Assertions.assertTrue(result>0);
-    }
-
-    private static List<Integer> getRightListFromFile() throws IOException {
-        return Files.readAllLines(Path.of("src/test/resources/exercise1/right.txt")).stream()
-                .map(Integer::valueOf)
-                .toList();
-    }
-
-    private static List<Integer> getLeftListFromFile() throws IOException {
-        return Files.readAllLines(Path.of("src/test/resources/exercise1/left.txt")).stream()
-                .map(Integer::valueOf)
-                .toList();
     }
 }
