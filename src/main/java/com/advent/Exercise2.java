@@ -1,5 +1,6 @@
 package com.advent;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.experimental.UtilityClass;
 
@@ -36,6 +37,29 @@ public final class Exercise2 {
             }
         }
 
+        return safe;
+    }
+
+    public static int numReportsSafeWithToleration(List<List<Integer>> reports){
+        return reports.stream()
+                .map(report -> isReportSafeWithToleration(report) ? 1 : 0)
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    public static boolean isReportSafeWithToleration(List<Integer> report){
+        var safe = isReportSafe(report);
+
+        if (!safe) {
+            int skip = 0;
+            List<Integer> filteredReport;
+            while (skip < report.size() && !safe) {
+                filteredReport = new ArrayList<>(report);
+                filteredReport.remove(skip);
+                safe = isReportSafe(filteredReport);
+                skip++;
+            }
+        }
         return safe;
     }
 }

@@ -3,6 +3,7 @@ package com.advent.util;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.experimental.UtilityClass;
@@ -25,8 +26,8 @@ public class FileUtils {
     }
 
     private static List<Integer> toIntList(String listStr) {
-        return Arrays.stream(listStr.split(SEPARATOR))
+        return new ArrayList<>(Arrays.stream(listStr.split(SEPARATOR))
                 .map(Integer::valueOf)
-                .toList();
+                .toList());
     }
 }
