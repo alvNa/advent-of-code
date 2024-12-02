@@ -1,7 +1,9 @@
 package com.advent;
 
 import java.util.List;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public final class Exercise2 {
 
     public static int numReportsSave(List<List<Integer>> reports){
@@ -17,8 +19,11 @@ public final class Exercise2 {
 
         if (report.size() > 2){
             boolean increaseOp = report.get(0) < report.get(1);
-            int index = 2;
-            while (index < report.size()-1 && safe){
+            boolean decreaseOp = report.get(0) > report.get(1);
+            safe = increaseOp || decreaseOp;
+
+            int index = 1;
+            while (index < report.size() && safe){
                 if (increaseOp){
                     int increment = report.get(index) - report.get(index-1);
                     safe = increment>=1 && increment<=3;
