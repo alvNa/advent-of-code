@@ -25,4 +25,21 @@ class Exercise3Test {
         Assertions.assertTrue(result >0);
         //190604937 That's the right answer!
     }
+
+    @Test
+    void multiplicationsSumWithEnablingTest(){
+        String input = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
+        var result = Exercise3.multiplicationsSumWithEnabling(input);
+        //48 (2*4 + 8*5)
+        Assertions.assertEquals(48,result);
+    }
+
+    @Test
+    void multiplicationsSumWithEnablingLargeExampleTest() throws IOException {
+        var program = Files.readString(Path.of("src/test/resources/exercise3/program.txt"));
+        var result = Exercise3.multiplicationsSumWithEnabling(program);
+        System.out.println("Multiplications added: " + result);
+        Assertions.assertTrue(result >0);
+        //82857512 That's the right answer!
+    }
 }
