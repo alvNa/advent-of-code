@@ -128,7 +128,6 @@ public class Exercise4 {
 
         for (int row = 0; row < matrix.length; row++) {
             for (int col = matrix.length-1; col >= 0; col--) {
-                System.out.println("row: " + row + " col: " + col);
                 if (isDiagonalLeftDownMatchCandidate(matrix, row, col)) {
                     counter++;
                 }
@@ -138,10 +137,17 @@ public class Exercise4 {
     }
 
     private static int diagonalLeftUp(char[][] matrix){
-        return 0;
+        int counter = 0;
+
+        for (int row = matrix.length-1; row >=0 ; row--) {
+            for (int col = matrix.length-1; col >= 0; col--) {
+                if (isDiagonalLeftUpMatchCandidate(matrix, row, col)) {
+                    counter++;
+                }
+            }
+        }
+        return counter;
     }
-
-
 
     private static boolean isDiagonalUpMatchCandidate(char[][] matrix, int row, int colum) {
         if (row < MATCH_WORD_LENGTH || colum + MATCH_WORD_LENGTH > matrix.length) {
@@ -169,6 +175,15 @@ public class Exercise4 {
         }
         else {
             return matrix[row][colum] =='X' && matrix[row+1][colum-1] =='M' && matrix[row+2][colum-2] =='A' && matrix[row+3][colum-3] =='S';
+        }
+    }
+
+    private static boolean isDiagonalLeftUpMatchCandidate(char[][] matrix, int row, int colum) {
+        if (row < MATCH_WORD_LENGTH || colum < MATCH_WORD_LENGTH) {
+            return false;
+        }
+        else {
+            return matrix[row][colum] =='X' && matrix[row-1][colum-1] =='M' && matrix[row-2][colum-2] =='A' && matrix[row-3][colum-3] =='S';
         }
     }
 
