@@ -27,7 +27,7 @@ public class Exercise4 {
         int counter = 0;
 
         for (int row = 0; row < matrix.length; row++) {
-            for (int col = 0; col < matrix[row].length; col++) {
+            for (int col = 0; col < matrix.length; col++) {
                 var currentLetter = matrix[row][col];
                 matchCandidate = getMatchCandidate(matchCandidate, currentLetter);
 
@@ -46,7 +46,7 @@ public class Exercise4 {
         int counter = 0;
 
         for (int row = matrix.length-1; row >= 0; row--) {
-            for (int col = 0; col < matrix[row].length; col++) {
+            for (int col = 0; col < matrix.length; col++) {
                 var currentLetter = matrix[row][col];
                 matchCandidate = getMatchCandidate(matchCandidate, currentLetter);
 
@@ -115,7 +115,7 @@ public class Exercise4 {
 
         for (int row = matrix.length-1; row >= 0 ; row--) {
             for (int col = 0; col < matrix[row].length; col++) {
-                if (isDiagonalUpMatchCandidate(matrix, row, col)) {
+                if (isDiagonalRightUpMatchCandidate(matrix, row, col)) {
                     counter++;
                 }
             }
@@ -149,8 +149,9 @@ public class Exercise4 {
         return counter;
     }
 
-    private static boolean isDiagonalUpMatchCandidate(char[][] matrix, int row, int colum) {
-        if (row < MATCH_WORD_LENGTH || colum + MATCH_WORD_LENGTH > matrix.length) {
+    private static boolean isDiagonalRightUpMatchCandidate(char[][] matrix, int row, int colum) {
+        var top = matrix.length - MATCH_WORD_LENGTH;
+        if (row < MATCH_WORD_LENGTH || colum > top) {
             return false;
         }
         else {
@@ -205,7 +206,7 @@ public class Exercise4 {
             matchCandidate ="XMAS";
         }
         else{
-            matchCandidate ="";
+            matchCandidate = String.valueOf(currentLetter);
         }
         return matchCandidate;
     }
