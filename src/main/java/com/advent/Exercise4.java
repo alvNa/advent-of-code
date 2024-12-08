@@ -5,209 +5,97 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Exercise4 {
     private static final String MATCH_WORD = "XMAS";
+    private static final String MATCH_WORD_REVERSED = "SAMX";
     private static final int MATCH_WORD_LENGTH = MATCH_WORD.length();
 
-    public static int findXMAS(char[][] matrix){
-        var case1 = findHorizontalRight(matrix);
-        var case2 = findHorizontalLeft(matrix);
-        var case3 = findVerticalDown(matrix);
-        var case4 = findVerticalUp(matrix);
-        var case5 = diagonalRightDown(matrix);
-        var case6 = diagonalRightUp(matrix);
-        var case7 = diagonalLeftUp(matrix);
-        var case8 = diagonalLeftDown(matrix);
-
-        return case1 + case2 + case3 + case4 +
-                case5 + case6 + case7 + case8;
+    public static int findXMAS(char[][] matrix) {
+        var x = findHorizontal2(matrix); //5
+        var y = findVertical(matrix); //1+2
+        var d1 = findDiagonalRight(matrix);//1+4
+        var d2 = findDiagonalLeft(matrix);//1+4
+        return x + y + d1 + d2;
     }
 
-    private static int findHorizontalRight(char[][] matrix/*, int row, int col*/){
-        String matchCandidate = "";
-
-        int counter = 0;
+    private int findHorizontal2(char[][] matrix) {
+        var count = 0;
+        var top = matrix.length - MATCH_WORD_LENGTH;
 
         for (int row = 0; row < matrix.length; row++) {
-            for (int col = 0; col < matrix.length; col++) {
-                var currentLetter = matrix[row][col];
-                matchCandidate = getMatchCandidate(matchCandidate, currentLetter);
+            for (int column = 0; column <= top; column++) {
 
-                if (isMatch(matchCandidate)) {
-                    counter++;
-                    matchCandidate = "";
+                if (isHorizontal(matrix, row, column)) {
+                    count++;
                 }
             }
         }
-        return counter;
+        return count;
     }
 
-    private static int findHorizontalLeft(char[][] matrix/*, int row, int col*/){
-        String matchCandidate = "";
-
-        int counter = 0;
-
-        for (int row = matrix.length-1; row >= 0; row--) {
-            for (int col = 0; col < matrix.length; col++) {
-                var currentLetter = matrix[row][col];
-                matchCandidate = getMatchCandidate(matchCandidate, currentLetter);
-
-                if (isMatch(matchCandidate)) {
-                    counter++;
-                    matchCandidate = "";
-                }
-            }
-        }
-        return counter;
-    }
-
-    private static int findVerticalDown(char[][] matrix/*, int row, int col*/){
-        String matchCandidate = "";
-
-        int counter = 0;
-
-        for (int col = 0; col < matrix.length; col++) {
-            for (int row = 0; row < matrix.length; row++) {
-                var currentLetter = matrix[row][col];
-                matchCandidate = getMatchCandidate(matchCandidate, currentLetter);
-
-                if (isMatch(matchCandidate)) {
-                    counter++;
-                    matchCandidate = "";
-                }
-            }
-        }
-        return counter;
-    }
-
-    private static int findVerticalUp(char[][] matrix/*, int row, int col*/){
-        String matchCandidate = "";
-
-        int counter = 0;
-
-        for (int col = 0; col < matrix.length; col++) {
-            for (int row = matrix.length-1; row >= 0; row--) {
-                var currentLetter = matrix[row][col];
-                matchCandidate = getMatchCandidate(matchCandidate, currentLetter);
-
-                if (isMatch(matchCandidate)) {
-                    counter++;
-                    matchCandidate = "";
-                }
-            }
-        }
-        return counter;
-    }
-
-    private static int diagonalRightDown(char[][] matrix){
-        int counter = 0;
-
-        for (int row = 0; row < matrix.length; row++) {
-            for (int col = 0; col < matrix[row].length; col++) {
-                if (isDiagonalRightDownMatchCandidate(matrix, row, col)) {
-                    counter++;
-                }
-            }
-        }
-        return counter;
-    }
-
-    private static int diagonalRightUp(char[][] matrix){
-        int counter = 0;
-
-        for (int row = matrix.length-1; row >= 0 ; row--) {
-            for (int col = 0; col < matrix[row].length; col++) {
-                if (isDiagonalRightUpMatchCandidate(matrix, row, col)) {
-                    counter++;
-                }
-            }
-        }
-        return counter;
-    }
-
-    private static int diagonalLeftDown(char[][] matrix){
-        int counter = 0;
-
-        for (int row = 0; row < matrix.length; row++) {
-            for (int col = matrix.length-1; col >= 0; col--) {
-                if (isDiagonalLeftDownMatchCandidate(matrix, row, col)) {
-                    counter++;
-                }
-            }
-        }
-        return counter;
-    }
-
-    private static int diagonalLeftUp(char[][] matrix){
-        int counter = 0;
-
-        for (int row = matrix.length-1; row >=0 ; row--) {
-            for (int col = matrix.length-1; col >= 0; col--) {
-                if (isDiagonalLeftUpMatchCandidate(matrix, row, col)) {
-                    counter++;
-                }
-            }
-        }
-        return counter;
-    }
-
-    private static boolean isDiagonalRightUpMatchCandidate(char[][] matrix, int row, int colum) {
+    private int findVertical(char[][] matrix) {
+        var count = 0;
         var top = matrix.length - MATCH_WORD_LENGTH;
-        if (row < MATCH_WORD_LENGTH || colum > top) {
-            return false;
+
+        for (int j = 0; j < matrix.length; j++) {
+            for (int i = 0; i <= top; i++) {
+
+                if (isVertical(matrix, i, j)) {
+                    count++;
+                }
+            }
         }
-        else {
-            return matrix[row][colum] =='X' && matrix[row-1][colum+1] =='M' && matrix[row-2][colum+2] =='A' && matrix[row-3][colum+3] =='S';
-        }
+        return count;
     }
 
-    private static boolean isDiagonalRightDownMatchCandidate(char[][] matrix, int row, int colum) {
+    private int findDiagonalRight(char[][] matrix) {
+        int counter = 0;
+
         var top = matrix.length - MATCH_WORD_LENGTH;
-        if (row > top || colum > top) {
-            return false;
+
+        for (int row = 0; row <= top; row++) {
+            for (int col = 0; col <= top; col++) {
+                if (isDiagonalRight(matrix, row, col)) {
+                    counter++;
+                }
+            }
         }
-        else {
-            return matrix[row][colum] =='X' && matrix[row+1][colum+1] =='M' && matrix[row+2][colum+2] =='A' && matrix[row+3][colum+3] =='S';
-        }
+        return counter;
     }
 
-    private static boolean isDiagonalLeftDownMatchCandidate(char[][] matrix, int row, int colum) {
+    private static int findDiagonalLeft(char[][] matrix) {
+        int counter = 0;
         var top = matrix.length - MATCH_WORD_LENGTH;
-        if (row > top || colum < MATCH_WORD_LENGTH) {
-            return false;
+
+        for (int row = 0; row <= top; row++) {
+            for (int col = MATCH_WORD_LENGTH - 1; col < matrix.length; col++) {
+                if (isDiagonalLeft(matrix, row, col)) {
+                    counter++;
+                }
+            }
         }
-        else {
-            return matrix[row][colum] =='X' && matrix[row+1][colum-1] =='M' && matrix[row+2][colum-2] =='A' && matrix[row+3][colum-3] =='S';
-        }
+        return counter;
     }
 
-    private static boolean isDiagonalLeftUpMatchCandidate(char[][] matrix, int row, int colum) {
-        if (row < MATCH_WORD_LENGTH || colum < MATCH_WORD_LENGTH) {
-            return false;
-        }
-        else {
-            return matrix[row][colum] =='X' && matrix[row-1][colum-1] =='M' && matrix[row-2][colum-2] =='A' && matrix[row-3][colum-3] =='S';
-        }
+    private static boolean isHorizontal(char[][] matrix, int row, int colum) {
+        boolean normal = matrix[row][colum] == 'X' && matrix[row][colum + 1] == 'M' && matrix[row][colum + 2] == 'A' && matrix[row][colum + 3] == 'S';
+        boolean reversed = matrix[row][colum] == 'S' && matrix[row][colum + 1] == 'A' && matrix[row][colum + 2] == 'M' && matrix[row][colum + 3] == 'X';
+        return normal || reversed;
     }
 
-    private static boolean isMatch(String matchCandidate) {
-        return MATCH_WORD.equals(matchCandidate);
+    private static boolean isVertical(char[][] matrix, int row, int colum) {
+        boolean normal = matrix[row][colum] == 'X' && matrix[row + 1][colum] == 'M' && matrix[row + 2][colum] == 'A' && matrix[row + 3][colum] == 'S';
+        boolean reversed = matrix[row][colum] == 'S' && matrix[row + 1][colum] == 'A' && matrix[row + 2][colum] == 'M' && matrix[row + 3][colum] == 'X';
+        return normal || reversed;
     }
 
-    private static String getMatchCandidate(String currentCandidate, char currentLetter) {
-        var matchCandidate = currentCandidate;
+    private static boolean isDiagonalRight(char[][] matrix, int row, int colum) {
+        boolean normal = matrix[row][colum] == 'X' && matrix[row + 1][colum + 1] == 'M' && matrix[row + 2][colum + 2] == 'A' && matrix[row + 3][colum + 3] == 'S';
+        boolean reversed = matrix[row][colum] == 'S' && matrix[row + 1][colum + 1] == 'A' && matrix[row + 2][colum + 2] == 'M' && matrix[row + 3][colum + 3] == 'X';
+        return normal || reversed;
+    }
 
-        if (matchCandidate.isEmpty() && currentLetter == 'X') {
-            matchCandidate ="X";
-        } else if ("X".equals(matchCandidate) && currentLetter == 'M') {
-            matchCandidate ="XM";
-        } else if ("XM".equals(matchCandidate) && currentLetter == 'A') {
-            matchCandidate ="XMA";
-        }
-        else if ("XMA".equals(matchCandidate) && currentLetter == 'S') {
-            matchCandidate ="XMAS";
-        }
-        else{
-            matchCandidate = String.valueOf(currentLetter);
-        }
-        return matchCandidate;
+    private static boolean isDiagonalLeft(char[][] matrix, int row, int colum) {
+        boolean normal = matrix[row][colum] == 'X' && matrix[row + 1][colum - 1] == 'M' && matrix[row + 2][colum - 2] == 'A' && matrix[row + 3][colum - 3] == 'S';
+        boolean reversed = matrix[row][colum] == 'S' && matrix[row + 1][colum - 1] == 'A' && matrix[row + 2][colum - 2] == 'M' && matrix[row + 3][colum - 3] == 'X';
+        return normal || reversed;
     }
 }

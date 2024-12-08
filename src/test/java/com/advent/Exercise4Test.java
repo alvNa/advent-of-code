@@ -23,6 +23,9 @@ class Exercise4Test {
         System.out.println("XMAS found: " + result);
         //XMAS found: 2332 is too low
         //2500 your answer is too high
-        Assertions.assertTrue(result>0);
+        //2348 That's not the right answer
+        //XMAS found: 2364
+        //XMAS found: 2358 That's the right answer!
+        Assertions.assertEquals(2358, result);
     }
 }
