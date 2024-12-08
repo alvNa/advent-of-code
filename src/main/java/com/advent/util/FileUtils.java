@@ -30,4 +30,10 @@ public class FileUtils {
                 .map(Integer::valueOf)
                 .toList());
     }
+
+    public static char[][] loadMatrix(Path filePath) throws IOException {
+        return Files.readAllLines(filePath).stream()
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+    }
 }
