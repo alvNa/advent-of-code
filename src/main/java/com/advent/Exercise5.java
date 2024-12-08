@@ -7,6 +7,40 @@ import java.util.regex.Pattern;
 public class Exercise5 {
     private Map<Integer, List<Integer>> rules;
 
+    public static int middlePageSumFromFixedOrderPages(Map<Integer, List<Integer>> rules, List<List<Integer>> pageList){
+        return pageList.stream()
+                .filter(pages -> !pagesValid(rules, pages))
+                .map(pages -> fixOrder(rules,pages))
+                .map(Exercise5::middlePageNum)
+                .reduce(0, Integer::sum);
+    }
+
+    private static List<Integer> fixOrder(Map<Integer, List<Integer>> rules, List<Integer> pages) {
+        var result = new ArrayList<>(pages);
+
+        while (!pagesValid(rules, result)){
+
+            for (int i=0;i<result.size();i++){
+                var page = result.get(i);
+
+                if (rules.containsKey(page)) {
+                    var constraints = rules.get(page);
+
+                    for(int j=i-1; j>=0; j--){
+                        var pageLeft = result.get(j);
+
+                        if (constraints.contains(pageLeft)) {
+                            result.remove(j);
+                            result.add(i,pageLeft);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
     public static int middlePageSumFromCorrectlyOrder(Map<Integer, List<Integer>> rules, List<List<Integer>> pageList){
         return pageList.stream()
                 .filter(pages -> pagesValid(rules, pages))

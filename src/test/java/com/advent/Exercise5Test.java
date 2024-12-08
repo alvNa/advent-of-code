@@ -51,4 +51,35 @@ public class Exercise5Test {
         System.out.println(result);
         Assertions.assertTrue(result>0);
     }
+
+    @Test
+    void middlePageSumFromFixedOrderPages() throws IOException {
+        var program = Files.readString(Path.of("src/test/resources/exercise5/program.txt"));
+        var segments = program.split("\n\n");
+        var rulesStr = segments[0];
+        var pagesStr = segments[1];
+
+        Map<Integer, List<Integer>> rules = Exercise5.getRules(rulesStr);
+        List<List<Integer>> pageList = Exercise5.getPageList(pagesStr);
+
+        var result = Exercise5.middlePageSumFromFixedOrderPages(rules,pageList);
+        Assertions.assertEquals(123,result);
+    }
+
+    @Test
+    void middlePageSumFromFixedOrderPagesLarge() throws IOException {
+        var program = Files.readString(Path.of("src/test/resources/exercise5/program-large.txt"));
+        var segments = program.split("\n\n");
+        var rulesStr = segments[0];
+        var pagesStr = segments[1];
+
+        Map<Integer, List<Integer>> rules = Exercise5.getRules(rulesStr);
+        List<List<Integer>> pageList = Exercise5.getPageList(pagesStr);
+
+        var result = Exercise5.middlePageSumFromFixedOrderPages(rules,pageList);
+        System.out.println(result);
+        Assertions.assertTrue(result>0);
+    }
+
+
 }
