@@ -28,4 +28,20 @@ class Exercise4Test {
         //XMAS found: 2358 That's the right answer!
         Assertions.assertEquals(2358, result);
     }
+
+    @Test
+    void findCrossMASTest() throws IOException {
+        var matrix = FileUtils.loadMatrix(Path.of("src/test/resources/exercise4/matrix.txt"));
+        var result = Exercise4b.findCrossMAS(matrix);
+        Assertions.assertEquals(9,result);
+    }
+
+    @Test
+    void findCrossMASLargeTest() throws IOException {
+        var matrix = FileUtils.loadMatrix(Path.of("src/test/resources/exercise4/matrix-large.txt"));
+        var result = Exercise4b.findCrossMAS(matrix);
+        System.out.println("Cross MAS: " + result);
+        //Cross MAS: 1737: That's the right answer!
+        Assertions.assertTrue(result>0);
+    }
 }
