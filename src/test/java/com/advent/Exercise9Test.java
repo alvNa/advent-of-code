@@ -32,7 +32,7 @@ class Exercise9Test {
         System.out.println("CheckSum: " + result);
         //CheckSum: 181189696 That's not the right answer; your answer is too low
         //CheckSum: 282055995 That's not the right answer; your answer is too low.
-        //282055995
+
         Assertions.assertTrue(result>0);
     }
 
