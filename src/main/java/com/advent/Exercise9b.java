@@ -64,62 +64,21 @@ public class Exercise9b {
     }
 
     private static List<String> decodeDiskMap(String diskMap) {
-//        int size = calculateSize(diskMap);
-//        char[] diskArray = new char[size];
         var diskArray = new ArrayList<String>();
-
-//        int currentPosition=0;
-        Integer idNumber=0;
+        int idNumber=0;
         for (int i=0;i<diskMap.length();i++){
             int num = Integer.parseInt(String.valueOf(diskMap.charAt(i)));
 
-            if (i %2 == 0){
-//                if (idNumber.toString().length()>1){
-                    for (int j=0;j<num; j++){
-                        diskArray.add(idNumber.toString());
-                    }
-//                }
-//                else{
-//                    var c = Character.forDigit(idNumber,10);
-//                    Arrays.fill(diskArray, currentPosition, currentPosition+num, c);
-//                    currentPosition+=num;
-//                }
-
-                idNumber++;
+            for (int j=0;j<num; j++){
+                String value = (i %2 == 0) ? Integer.toString(idNumber):FREE_POSITION;
+                diskArray.add(value);
             }
-            else {
-                for (int k=0;k<num; k++){
-                    diskArray.add(FREE_POSITION);
-                }
-//                Arrays.fill(diskArray, currentPosition, currentPosition+num, FREE_POSITION);
-//                currentPosition+=num;
+
+            if (i %2 == 0){
+                idNumber++;
             }
         }
 
         return diskArray;
     }
-
-    //2333133121414131402
-//    private static int calculateSize(String diskMap) {
-//        int size = 0;
-//        var idNumber=0;
-//        for (int i=0;i<diskMap.length();i++){
-//            int numRepeat = Integer.parseInt(String.valueOf(diskMap.charAt(i)));
-//            if (i %2 == 0){
-//                var numDigits = String.valueOf(idNumber).length();
-//                size+= (numRepeat * numDigits);
-//                idNumber++;
-//            }
-//            else{
-//                size+= numRepeat;
-//            }
-////            if (String.valueOf(num).length()>1){
-////                size+= num * String.valueOf(num).length();
-////            }
-////            size+= num;
-//        }
-//        return size;
-//    }
-
-
 }
