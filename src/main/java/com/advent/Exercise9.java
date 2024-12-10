@@ -8,7 +8,7 @@ public class Exercise9 {
 
     public static final String FREE_POSITION = ".";
 
-    public static long fileSystemCheckSum(String diskMap){
+    public static long fileSystemDefragCheckSum(String diskMap){
         var disk = decodeDiskMap(diskMap);
 //        System.out.println(disk);
         var compressedDisk = compressDiskMap(disk);
@@ -52,18 +52,22 @@ public class Exercise9 {
             }
 
             if (indexLeft < indexRight) {
-                String number = compressDisk.get(indexRight);
-                compressDisk.remove(indexLeft);
-                compressDisk.add(indexLeft, number);
-                compressDisk.remove(indexRight);
-                compressDisk.add(indexRight, FREE_POSITION);
+                swapData(compressDisk, indexRight, indexLeft);
             }
         }
 
         return compressDisk;
     }
 
-    private static List<String> decodeDiskMap(String diskMap) {
+    public static void swapData(ArrayList<String> compressDisk, int indexRight, int indexLeft) {
+        String number = compressDisk.get(indexRight);
+        compressDisk.remove(indexLeft);
+        compressDisk.add(indexLeft, number);
+        compressDisk.remove(indexRight);
+        compressDisk.add(indexRight, FREE_POSITION);
+    }
+
+    public static List<String> decodeDiskMap(String diskMap) {
         var diskArray = new ArrayList<String>();
         int idNumber=0;
         for (int i=0;i<diskMap.length();i++){
