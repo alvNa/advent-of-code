@@ -8,7 +8,7 @@ public class Exercise9b {
 
     public static final String FREE_POSITION = ".";
 
-    public static int fileSystemCheckSum(String diskMap){
+    public static long fileSystemCheckSum(String diskMap){
         var disk = decodeDiskMap(diskMap);
 //        System.out.println(disk);
         var compressedDisk = compressDiskMap(disk);
@@ -16,8 +16,8 @@ public class Exercise9b {
         return calculateCheckSum(compressedDisk);
     }
 
-    private static int calculateCheckSum(List<String> compressedDisk) {
-        int sum = 0;
+    private static long calculateCheckSum(List<String> compressedDisk) {
+        long sum = 0;
         boolean finished = false;
         int i = 0;
         while (i<compressedDisk.size() && !finished){
@@ -26,9 +26,9 @@ public class Exercise9b {
                 finished=true;
             }
             else {
-                var num = Integer.parseInt(compressedDisk.get(i));
-                var numValue = num * i;
-                sum = sum + numValue;
+                var num = Long.parseLong(compressedDisk.get(i));
+                long numValue = i * num;
+                sum += numValue;
             }
             i++;
         }
