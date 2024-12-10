@@ -1,5 +1,6 @@
 package com.advent;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,32 +15,41 @@ public class Exercise9b {
     public static long fileSystemCompactCheckSum(String diskMap){
         var disk = decodeDiskMap(diskMap);
 //        System.out.println(disk);
+        System.out.println("Empty blocks: " + findEmptyBlocks(disk));
         var compressedDisk = compressDiskMapByBlock(disk, diskMap.length()/2);
 //        System.out.println(compressedDisk);
+        System.out.println("Empty blocks: " + findEmptyBlocks(compressedDisk));
         return calculateCheckSumWithSpaces(compressedDisk);
     }
 
     private static long calculateCheckSumWithSpaces(List<String> compressedDisk) {
-        long sum = 0;
+        BigInteger sum = new BigInteger(String.valueOf(0L));
+        long max = 0;
         for (int i=0; i<compressedDisk.size(); i++){
             var content = compressedDisk.get(i);
+
             if (!Objects.equals(content, FREE_POSITION)){
-                var num = Long.parseLong(compressedDisk.get(i));
-                long numValue = i * num;
-                sum += numValue;
+                var num = Integer.parseInt(content);
+                long numValue = (long) i * num;
+                if (numValue> max){
+                    max = numValue;
+                }
+//                sum += numValue;
+                sum = sum.add(new BigInteger(String.valueOf(numValue)));
             }
         }
-        return sum;
+
+        return sum.longValue();
     }
 
     private static List<String> compressDiskMapByBlock(List<String> disk, int maxIdNumber) {
         var compressDisk = new ArrayList<>(disk);
 
         var indexLeft = 0;
-        var indexRight = disk.size()-1;
+        var indexRight = compressDisk.size()-1;
         var currentIdNumber = maxIdNumber;
 
-        while (indexLeft < indexRight && currentIdNumber>=0){
+        while (currentIdNumber>0){
             var blockDataSize=0;
 
             //skipSpaces
@@ -62,45 +72,49 @@ public class Exercise9b {
                 while (!compressDisk.get(indexRight).equals(FREE_POSITION) && currentNum == Integer.parseInt(compressDisk.get(indexRight))){
                     indexRight--;
                 }
-                //contrarrest next iteration
-//                currentIdNumber++;
             }
-            else { //if (currentNum < currentIdNumber)
+            else {
                 currentIdNumber--;
             }
 
             var blockDataFreeSpace = 0;
-            var indexLeftAux = indexLeft;
-            while (blockDataFreeSpace < blockDataSize && indexLeftAux < indexRight){
-                if (Objects.equals(compressDisk.get(indexLeftAux), FREE_POSITION)){
+            while (blockDataFreeSpace < blockDataSize && indexLeft < indexRight){
+                if (Objects.equals(compressDisk.get(indexLeft), FREE_POSITION)){
                     blockDataFreeSpace++;
                 }
 
-                if (!Objects.equals(compressDisk.get(indexLeftAux), FREE_POSITION)){
+                if (!Objects.equals(compressDisk.get(indexLeft), FREE_POSITION)){
                     blockDataFreeSpace=0;
                 }
-                indexLeftAux++;
+                indexLeft++;
             }
 
             if (blockDataFreeSpace >= blockDataSize){
                 for (int i=0; i<blockDataSize; i++){
                     var positionRight = indexRight+1+i;
-                    var positionLeft = indexLeftAux-blockDataSize+i;
+                    var positionLeft = indexLeft-blockDataSize+i;
 
                     swapData(compressDisk, positionRight, positionLeft);
                 }
             }
 
-//            currentIdNumber--;
-
-
-            //Set left index
-            indexLeft = 0;
-            while (!Objects.equals(compressDisk.get(indexLeft), FREE_POSITION)){
-                indexLeft++;
-            }
+            indexLeft = getFirstFreePosition(compressDisk);
         }
 
         return compressDisk;
+    }
+
+    private static int getFirstFreePosition(ArrayList<String> compressDisk) {
+        int i=0;
+        while (!Objects.equals(compressDisk.get(i), FREE_POSITION)){
+            i++;
+        }
+        return i;
+    }
+
+    private static long findEmptyBlocks(List<String> disk){
+        return disk.stream()
+                .filter(s -> s.equals(FREE_POSITION))
+                .count();
     }
 }
