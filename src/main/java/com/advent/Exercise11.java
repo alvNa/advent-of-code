@@ -2,7 +2,7 @@ package com.advent;
 
 import com.advent.util.Tuple;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Exercise11 {
@@ -18,7 +18,7 @@ public class Exercise11 {
     }
 
     public static List<Long> blink(List<Long> stones) {
-        List<Long> transformedStones = new ArrayList<>();
+        List<Long> transformedStones = new LinkedList<>();
 
         for(long stone: stones){
             var transformation = applyRule(stone);
