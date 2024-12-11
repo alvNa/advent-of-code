@@ -59,7 +59,7 @@ public class Exercise9 {
         return compressDisk;
     }
 
-    public static void swapData(ArrayList<String> compressDisk, int indexRight, int indexLeft) {
+    public static void swapData(List<String> compressDisk, int indexRight, int indexLeft) {
         String number = compressDisk.get(indexRight);
         compressDisk.remove(indexLeft);
         compressDisk.add(indexLeft, number);

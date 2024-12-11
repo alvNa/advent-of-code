@@ -57,8 +57,9 @@ class Exercise9Test {
         var result = Exercise9b.fileSystemCompactCheckSum(diskMap);
         System.out.println("CheckSum: " + result);
         //CheckSum: 6389911984784 That's not the right answer; your answer is too high
-        //Max 285755454
-        Assertions.assertTrue(result>0);
+        // CheckSum: 6389911791746
+        //That's the right answer! You are one gold star closer to debugging the printer.
+        Assertions.assertEquals(6389911791746L, result);
     }
 
 
