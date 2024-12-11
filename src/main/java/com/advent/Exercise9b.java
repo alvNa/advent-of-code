@@ -1,7 +1,5 @@
 package com.advent;
 
-import com.advent.util.Tuple;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,17 +55,11 @@ public class Exercise9b {
                     blockDataSize++;
                     indexRight--;
                 }
-//                var tuple = calculateBlockSize(currentIdNumber, compressDisk, indexRight);
-//                blockDataSize = tuple.x();
-//                indexRight = tuple.y();
                 currentIdNumber--;
             }
             else if (currentNum > currentIdNumber){
                 indexRight = skipBLock(compressDisk, indexRight, currentNum);
             }
-//            else {
-//                currentIdNumber--;
-//            }
 
             var blockDataFreeSpace = 0;
             while (blockDataFreeSpace < blockDataSize && indexLeft <= indexRight){
@@ -113,35 +105,6 @@ public class Exercise9b {
         return indexRight;
     }
 
-    //    private static int processRightDataBlock(){
-//        int currentNum = Integer.parseInt(compressDisk.get(indexRight));
-//        if (currentNum == currentIdNumber){
-//            while (Objects.equals(compressDisk.get(indexRight), String.valueOf(currentIdNumber))){
-//                blockDataSize++;
-//                indexRight--;
-//            }
-//            currentIdNumber--;
-//        }
-//        else if (currentNum > currentIdNumber){
-//            //Skip Block
-//            while (!compressDisk.get(indexRight).equals(FREE_POSITION) && currentNum == Integer.parseInt(compressDisk.get(indexRight))){
-//                indexRight--;
-//            }
-//        }
-//        else {
-//            currentIdNumber--;
-//        }
-//    }
-//
-    private static Tuple<Integer> calculateBlockSize(int currentIdNumber, List<String> compressDisk, int indexRight){
-        var blockDataSize=0;
-        while (Objects.equals(compressDisk.get(indexRight), String.valueOf(currentIdNumber))){
-            blockDataSize++;
-            indexRight--;
-        }
-        return new Tuple<>(blockDataSize, indexRight);
-    }
-
     private static int skipRightSpaces(List<String> compressDisk, int indexRight) {
         if (compressDisk.get(indexRight).equals(FREE_POSITION)){
             while (Objects.equals(compressDisk.get(indexRight), FREE_POSITION)){
@@ -157,11 +120,5 @@ public class Exercise9b {
             i++;
         }
         return i;
-    }
-
-    private static long findEmptyBlocks(List<String> disk){
-        return disk.stream()
-                .filter(s -> s.equals(FREE_POSITION))
-                .count();
     }
 }
