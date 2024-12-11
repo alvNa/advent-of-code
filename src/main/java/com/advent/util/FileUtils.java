@@ -32,6 +32,12 @@ public class FileUtils {
                 .toList());
     }
 
+    public static List<Long> laodLongList(Path filePath) throws IOException {
+        return new ArrayList<>(Arrays.stream(Files.readString(filePath).split(SEPARATOR))
+                .map(Long::valueOf)
+                .toList());
+    }
+
     public static char[][] loadMatrix(Path filePath) throws IOException {
         return Files.readAllLines(filePath).stream()
                 .map(String::toCharArray)
