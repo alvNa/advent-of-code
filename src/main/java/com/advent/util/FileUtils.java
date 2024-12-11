@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -35,5 +36,19 @@ public class FileUtils {
         return Files.readAllLines(filePath).stream()
                 .map(String::toCharArray)
                 .toArray(char[][]::new);
+    }
+
+    public static int[][] loadIntMatrix(Path filePath) throws IOException {
+        return Files.readAllLines(filePath).stream()
+                .map(FileUtils::toArrayInt)
+                 .toArray(int[][]::new);
+    }
+
+    private static int[] toArrayInt(String str) {
+        int[] array = new int[str.length()];
+        for (int i = 0; i < str.length(); i++) {
+            array[i] = str.charAt(i) - '0';
+        }
+        return array;
     }
 }
