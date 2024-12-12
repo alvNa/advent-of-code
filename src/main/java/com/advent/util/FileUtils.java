@@ -26,8 +26,8 @@ public class FileUtils {
                 .toList();
     }
 
-    private static List<Integer> toIntList(String listStr) {
-        return new ArrayList<>(Arrays.stream(listStr.split(SEPARATOR))
+    public static List<Integer> toIntList(String listStr) {
+        return new ArrayList<>(Arrays.stream(listStr.trim().split(SEPARATOR))
                 .map(Integer::valueOf)
                 .toList());
     }
