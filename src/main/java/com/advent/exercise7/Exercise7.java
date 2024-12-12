@@ -27,32 +27,43 @@ public class Exercise7 {
         return found;
     }
 
-    private static long getEquationValue(List<Integer> operands, int operators, String candidates) {
+    public static long getEquationValue(List<Integer> operands, int operators, String candidates) {
         var operandsIndex =0;
         long equationValue =0;
 
         for (int j = 0; j< operators; j++) {
-            long a,b;
+            Long a,b;
             if (j == 0) {
-                a = operands.get(operandsIndex);
-                b = operands.get(operandsIndex +1);
+                a = operands.get(operandsIndex).longValue();
+                b = operands.get(operandsIndex +1).longValue();
                 operandsIndex = operandsIndex +2;
             }
             else{
                 a = equationValue;
-                b = operands.get(operandsIndex);
+                b = operands.get(operandsIndex).longValue();
                 operandsIndex++;
             }
 
             var operator = candidates.charAt(j);
-            if (operator == '0') {
-                equationValue = a + b;
-            }
-            else if (operator == '1'){
-                equationValue = a * b;
-            }
+            equationValue = calculateOperation(operator, a, b);
         }
         return equationValue;
+    }
+
+    private static long calculateOperation(char operator, Long a, Long b) {
+        long result =0;
+
+        if (operator == '0') {
+            result = a + b;
+        }
+        else if (operator == '1'){
+            result = a * b;
+        }
+        else if (operator == '2'){
+            String newValue = a.toString() + b.toString();
+            result = Long.parseLong(newValue);
+        }
+        return result;
     }
 
     private static String toBinary(int number, int length) {
@@ -64,13 +75,18 @@ public class Exercise7 {
         return binary;
     }
 
-    private static String toOperators(String binaryOperators){
-        return binaryOperators.chars()
+    private static String toOperators(String ternaryOperators){
+        return ternaryOperators.chars()
                 .mapToObj(c -> (char) c)
-                .map(c -> c == '0' ? "+" : "*")
+                .map(c -> switch (c){
+                    case 0: yield "+";
+                    case 1: yield "*";
+                    case 2: yield "||";
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + c);
+                })
                 .collect(Collectors.joining());
     }
-
     private static void printEquation(Long result, List<Integer> operands, String candidates) {
         System.out.println("Found: " + result);
         System.out.println("Operands: " + operands);
