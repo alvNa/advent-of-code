@@ -1,9 +1,6 @@
 package com.advent.exercise6;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Exercise6b {
     private static final char GUARD_NORTH = '^';
@@ -18,19 +15,21 @@ public class Exercise6b {
     private static final char LEFT_RIGHT = '-';
     private static final char INTERSECTION = '+';
 
-    private static int obstructions =0;
+    private static Set<Position> loopPoints = new HashSet<>();
+    private static List<Position> squareCornersQueue = new ArrayList<>();
+    private static Set<Position> obstructionSet = new HashSet<>();
 
     public static int findNumObstructionsPositions(char[][] matrix){
-        var finalState = resolvePuzzle(matrix);
-        //var obs = countObstructions(finalState);
-        return obstructions;
+        squareCornersQueue.clear();
+        obstructionSet.clear();
+        var matrixSolved = resolvePuzzle(matrix);
+        //System.out.println(matrixSolved);
+        return obstructionSet.size();
     }
 
     private static char[][] resolvePuzzle(char[][] initMatrix) {
         char[][] matrix = initMatrix;
         Vector vector = findGuard(matrix).get();
-        obstructions = 0;
-        List<Position> crossPositions = new ArrayList<Position>();
 
         while (positionInRange(vector.pos(),matrix.length)){
             var position = vector.pos();
@@ -46,77 +45,97 @@ public class Exercise6b {
             if (containsObstacle(matrix,nextPosition)){
                 var newDirection=changeGuardDirection(direction);
                 var nextVector = new Vector(position, newDirection);
-                moveGuard(matrix,vector,nextVector,null);
+                moveGuard(matrix,vector,nextVector);
                 vector = nextVector;
-                crossPositions.add(position);
+                squareCornersQueue.add(position);
             }
             else{
                 var nextVector = new Vector(nextPosition,direction);
-                moveGuard(matrix,vector,nextVector,crossPositions);
+                moveGuard(matrix,vector,nextVector);
                 vector = nextVector;
             }
 
-            if (crossPositions.size()==4){
-                crossPositions.clear();
+            if (squareCornersQueue.size()==3){
+                var pos1 = squareCornersQueue.get(0);
+                var pos2 = squareCornersQueue.get(1);
+                var pos3 = squareCornersQueue.get(2);
+
+                if (pos1.x()==pos2.x() && pos2.y()==pos3.y() && pos1.x()<pos3.x() && pos1.y() < pos3.y()){
+                    var obs = new Position(pos3.x(), pos1.y()-1);
+                    if (!obstacleCollision(matrix,pos3,obs,Direction.WEST)){
+                        obstructionSet.add(obs);
+                    }
+                    squareCornersQueue.remove(0);
+                }
+                else if (pos1.y()==pos2.y() && pos2.x()==pos3.x() && pos1.y() > pos3.y()){
+                    var obs = new Position(pos1.x()-1, pos3.y());
+                    if (!obstacleCollision(matrix,pos3,obs,Direction.NORTH)){
+                        obstructionSet.add(obs);
+                    }
+                    squareCornersQueue.remove(0);
+                }
+                else if (pos1.x()==pos2.x() && pos2.y()==pos3.y() && pos1.y() > pos3.y()){
+                    var obs = new Position(pos3.x(), pos1.y()+1);
+                    if (!obstacleCollision(matrix,pos3,obs,Direction.EAST)){
+                        obstructionSet.add(obs);
+                    }
+                    squareCornersQueue.remove(0);
+                }
+                else if (pos1.y()==pos2.y() && pos2.x()==pos3.x() && pos1.y() < pos3.y()){
+                    var obs = new Position(pos1.x()+1, pos3.y());
+                    if (!obstacleCollision(matrix,pos3,obs,Direction.SOUTH)){
+                        obstructionSet.add(obs);
+                    }
+                    squareCornersQueue.remove(0);
+                }
             }
         }
 
         return matrix;
     }
 
-    private static boolean isLoop(char[][] matrix, Vector vector) {
-        //boolean result;
+    private static boolean obstacleCollision(char[][] matrix, Position initPosition, Position endPosition, Direction direction){
+        boolean found = false;
+        var row = initPosition.x();
+        var colum = initPosition.y();
+        var topRow = endPosition.x();
+        var topColumn = endPosition.y();
 
-        var pos = vector.pos();
-        var dir = vector.direction();
-
-//        if (pos.x()==6 && pos.y()==4){
-//            System.out.println(pos);
-//        }
-
-        if (positionInRange(pos,matrix.length)) {
-
-            if (matrix[pos.x()][pos.y()] == GUARD_WEST && dir == Direction.WEST) {
-
-                if (pos.y() - 1 >= 0 &&
-                        (matrix[pos.x()][pos.y()-1] == UP_DOWN || matrix[pos.x()][pos.y()-1] == INTERSECTION)){
-                    System.out.println("(x,y) =("+pos.x()+","+pos.y()+")");
-                    return true;
+        switch (direction){
+            case WEST -> {
+                int j = colum;
+                while (j>= topColumn && !found){
+                    found = matrix[row][j] == OBSTACLE;
+                    j--;
                 }
             }
-
-            if (matrix[pos.x()][pos.y()] == GUARD_EAST && dir == Direction.EAST) {
-
-                if (pos.y() + 1 < matrix.length &&
-                        (matrix[pos.x()][pos.y()+1] == UP_DOWN || matrix[pos.x()][pos.y()+1] == INTERSECTION)){
-                    System.out.println("(x,y) =("+pos.x()+","+pos.y()+")");
-                    return true;
+            case NORTH -> {
+                int i = row;
+                while (i>=topRow && !found){
+                    found = matrix[i][colum] == OBSTACLE;
+                    i--;
                 }
             }
-
-            if (matrix[pos.x()][pos.y()] == GUARD_NORTH && dir == Direction.NORTH) {
-
-                if (pos.x() -1 > 0 &&
-                        (matrix[pos.x()-1][pos.y()] == LEFT_RIGHT || matrix[pos.x()-1][pos.y()] == INTERSECTION)){
-                    System.out.println("(x,y) =("+pos.x()+","+pos.y()+")");
-                    return true;
+            case EAST -> {
+                int j = colum;
+                while (j<=topColumn && !found){
+                    found = matrix[row][j] == OBSTACLE;
+                    j++;
                 }
             }
-
-            if (matrix[pos.x()][pos.y()] == GUARD_SOUTH && dir == Direction.SOUTH) {
-
-                if (pos.x() +1 < matrix.length &&
-                    (matrix[pos.x()+1][pos.y()] == LEFT_RIGHT || matrix[pos.x()+1][pos.y()] == INTERSECTION)){
-                    System.out.println("(x,y) =("+pos.x()+","+pos.y()+")");
-                    return true;
+            case SOUTH -> {
+                int i = row;
+                while (i<=topRow && !found){
+                    found = matrix[i][colum] == OBSTACLE;
+                    i++;
                 }
             }
         }
 
-        return false;
+        return found;
     }
 
-    private static void moveGuard(char[][] matrix, Vector vector, Vector nextVector, List<Position> crossPositions) {
+    private static void moveGuard(char[][] matrix, Vector vector, Vector nextVector) {
 
         if (vector.pos()==nextVector.pos() && vector.direction() != nextVector.direction()){
             matrix[vector.pos().x()][vector.pos().y()] = INTERSECTION;
@@ -150,11 +169,6 @@ public class Exercise6b {
                 case NORTH -> {
                     if (current == LEFT_RIGHT) {
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = INTERSECTION;
-                        if (crossPositions.size()==3){
-                            obstructions++;
-                            //crossPositions.clear();
-                            crossPositions.add(nextVector.pos());
-                        }
                     }
                     else {
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = GUARD_NORTH;
@@ -163,11 +177,6 @@ public class Exercise6b {
                 case EAST -> {
                     if (current == UP_DOWN){
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = INTERSECTION;
-                        if (crossPositions.size()==3){
-                            obstructions++;
-                            //crossPositions.clear();
-                            crossPositions.add(nextVector.pos());
-                        }
                     }
                     else {
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = GUARD_EAST;
@@ -176,11 +185,6 @@ public class Exercise6b {
                 case SOUTH -> {
                     if (current == LEFT_RIGHT) {
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = INTERSECTION;
-                        if (crossPositions.size()==3){
-                            obstructions++;
-                            //crossPositions.clear();
-                            crossPositions.add(nextVector.pos());
-                        }
                     }
                     else {
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = GUARD_SOUTH;
@@ -189,11 +193,6 @@ public class Exercise6b {
                 case WEST -> {
                     if (current == UP_DOWN){
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = INTERSECTION;
-                        if (crossPositions.size()==3){
-                            obstructions++;
-                            //crossPositions.clear();
-                            crossPositions.add(nextVector.pos());
-                        }
                     }
                     else {
                         matrix[nextVector.pos().x()][nextVector.pos().y()] = GUARD_WEST;
@@ -201,36 +200,6 @@ public class Exercise6b {
                 }
             }
         }
-    }
-
-
-//    private static void moveGuard(char[][] matrix, Position position, Position nextPosition, Direction direction) {
-//
-//        if (null==direction) {
-//            switch (direction) {
-//                case NORTH, SOUTH -> matrix[position.x()][position.y()] = UP_DOWN;
-//                case EAST, WEST -> matrix[position.x()][position.y()] = LEFT_RIGHT;
-//            }
-//        }
-//
-//        if (positionInRange(nextPosition,matrix.length)) {
-//            switch (direction) {
-//                case NORTH -> matrix[nextPosition.x()][nextPosition.y()] = GUARD_NORTH;
-//                case EAST -> matrix[nextPosition.x()][nextPosition.y()] = GUARD_EAST;
-//                case SOUTH -> matrix[nextPosition.x()][nextPosition.y()] = GUARD_SOUTH;
-//                case WEST -> matrix[nextPosition.x()][nextPosition.y()] = GUARD_WEST;
-//            }
-//        }
-//    }
-
-    private static void changeGuardDirection(char[][] matrix, Position position) {
-//        switch (dir) {
-//            case NORTH -> matrix[position.x()][position.y()] = GUARD_NORTH;
-//            case EAST -> matrix[position.x()][position.y()] = GUARD_EAST;
-//            case SOUTH -> matrix[position.x()][position.y()] = GUARD_SOUTH;
-//            case WEST -> matrix[position.x()][position.y()] = GUARD_WEST;
-//        }
-        matrix[position.x()][position.y()] = INTERSECTION;
     }
 
     /**
@@ -245,47 +214,47 @@ public class Exercise6b {
         };
     }
 
-    private static int countObstructions(char[][] matrix) {
-        var candidates = new HashSet<Position>();
-        var count = 0;
-        for (int row = 0; row < matrix.length; row++) {
-            for (int column = 0; column < matrix.length; column++) {
-                char currentValue = matrix[row][column];
-                var maybeObstacle = surroundedByObstacle(matrix,row,column);
-                if (currentValue == INTERSECTION && maybeObstacle.isPresent()){
-                    candidates.add(maybeObstacle.get());
-                }
-            }
-        }
-        return candidates.size();
-    }
+//    private static int countObstructions(char[][] matrix) {
+//        var candidates = new HashSet<Position>();
+//        var count = 0;
+//        for (int row = 0; row < matrix.length; row++) {
+//            for (int column = 0; column < matrix.length; column++) {
+//                char currentValue = matrix[row][column];
+//                var maybeObstacle = surroundedByObstacle(matrix,row,column);
+//                if (currentValue == INTERSECTION && maybeObstacle.isPresent()){
+//                    candidates.add(maybeObstacle.get());
+//                }
+//            }
+//        }
+//        return candidates.size();
+//    }
 
-    private static Optional<Position> surroundedByObstacle(char[][] matrix, int row, int column) {
-        int i=0;
-        Optional<Position> result = Optional.empty();
-        if (row-1 > 0 && matrix[row-1][column] == OBSTACLE ){
-            i++;
-            result = Optional.of(new Position(row-1,column));
-        }
-        if (row+1 < matrix.length && matrix[row+1][column] == OBSTACLE ){
-            i++;
-            result = Optional.of(new Position(row+1,column));
-        }
-        if (column-1 > 0 && matrix[row][column-1] == OBSTACLE ){
-            i++;
-            result = Optional.of(new Position(row-1,column));
-        }
-        if (column+1 < matrix.length && matrix[row][column+1] == OBSTACLE ){
-            i++;
-            result = Optional.of(new Position(row,column+1));
-        }
-        if (i>1) {
-            System.out.println("i " + i);
-        }
-        return result;
-//        return matrix[row-1][column] == OBSTACLE || matrix[row+1][column] == OBSTACLE ||
-//                matrix[row][column-1] == OBSTACLE || matrix[row+1][column+1] == OBSTACLE;
-    }
+//    private static Optional<Position> surroundedByObstacle(char[][] matrix, int row, int column) {
+//        int i=0;
+//        Optional<Position> result = Optional.empty();
+//        if (row-1 > 0 && matrix[row-1][column] == OBSTACLE ){
+//            i++;
+//            result = Optional.of(new Position(row-1,column));
+//        }
+//        if (row+1 < matrix.length && matrix[row+1][column] == OBSTACLE ){
+//            i++;
+//            result = Optional.of(new Position(row+1,column));
+//        }
+//        if (column-1 > 0 && matrix[row][column-1] == OBSTACLE ){
+//            i++;
+//            result = Optional.of(new Position(row-1,column));
+//        }
+//        if (column+1 < matrix.length && matrix[row][column+1] == OBSTACLE ){
+//            i++;
+//            result = Optional.of(new Position(row,column+1));
+//        }
+//        if (i>1) {
+//            System.out.println("i " + i);
+//        }
+//        return result;
+////        return matrix[row-1][column] == OBSTACLE || matrix[row+1][column] == OBSTACLE ||
+////                matrix[row][column-1] == OBSTACLE || matrix[row+1][column+1] == OBSTACLE;
+//    }
 
     private static Optional<Vector> findGuard(char[][] matrix){
         for (int row = 0; row < matrix.length; row++) {

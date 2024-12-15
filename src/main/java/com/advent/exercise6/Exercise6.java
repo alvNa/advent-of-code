@@ -69,7 +69,7 @@ public class Exercise6 {
     /**
      * Rotates the direction 90º
      */
-    private static Direction changeGuardDirection(Direction dir) {
+    static Direction changeGuardDirection(Direction dir) {
         return switch (dir) {
             case NORTH -> Direction.EAST;
             case EAST -> Direction.SOUTH;
@@ -90,7 +90,7 @@ public class Exercise6 {
         return count;
     }
 
-    private static Optional<Vector> findGuard(char[][] matrix){
+    static Optional<Vector> findGuard(char[][] matrix){
         for (int row = 0; row < matrix.length; row++) {
             for (int column = 0; column < matrix.length; column++) {
 
@@ -106,11 +106,11 @@ public class Exercise6 {
         return Optional.empty();
     }
 
-    private static boolean containsObstacle(char[][] matrix, Position pos){
+    static boolean containsObstacle(char[][] matrix, Position pos){
         return positionInRange(pos,matrix.length) && matrix[pos.x()][pos.y()]==OBSTACLE;
     }
 
-    private static boolean positionInRange(Position position, int maxSize){
+    static boolean positionInRange(Position position, int maxSize){
         return position.x()>=0 && position.x() < maxSize &&
                position.y()>=0 && position.y() < maxSize;
     }
