@@ -1,6 +1,4 @@
 package com.advent.exercise13;
 
-public record ClawState(
-    int numButtonAPress, int numButtonBPress,
-    int currentXValue, int currentYValue, int currentCost){
+public record ClawState(int aButtonPress, int bButtonBPress, int tokens) {
 }

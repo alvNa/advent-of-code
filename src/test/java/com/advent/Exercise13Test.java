@@ -8,12 +8,19 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class Exercise13Test {
+class Exercise13Test {
 
     @Test
     void minTokenForAllPricesTest() throws IOException {
-        var clawMachine = InputProcessor.processInput(Path.of("src/test/resources/exercise13/puzzle-input.txt"));
-        Exercise13.minTokenForAllPrices(clawMachine);
-        Assertions.assertEquals(0,0);
+        var clawMachines = InputProcessor.processInput(Path.of("src/test/resources/exercise13/puzzle-input.txt"));
+        var result = Exercise13.minTokenForAllPrices(clawMachines);
+        Assertions.assertEquals(480,result);
+    }
+
+    @Test
+    void minTokenForAllPricesLargeTest() throws IOException {
+        var clawMachines = InputProcessor.processInput(Path.of("src/test/resources/exercise13/puzzle-input-large.txt"));
+        var result = Exercise13.minTokenForAllPrices(clawMachines);
+        Assertions.assertEquals(35997,result);
     }
 }
