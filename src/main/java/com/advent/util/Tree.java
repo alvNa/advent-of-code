@@ -1,4 +1,4 @@
-package com.advent.exercise10;
+package com.advent.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,6 @@ public class Tree<T> {
     @Data
     public static class Node<T> {
         private T data;
-        private Node<T> parent;
         private List<Node<T>> children;
     }
 }

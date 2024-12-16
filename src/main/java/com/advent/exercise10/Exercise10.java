@@ -1,10 +1,12 @@
 package com.advent.exercise10;
 
+import com.advent.util.Tree;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.advent.exercise10.TreeUtils.getAllLeafNodes;
-import static com.advent.exercise10.TreeUtils.getAllPaths;
+import static com.advent.util.TreeUtils.getAllLeafNodes;
+import static com.advent.util.TreeUtils.getAllPaths;
 
 public class Exercise10 {
 

@@ -1,4 +1,4 @@
-package com.advent.exercise10;
+package com.advent.util;
 
 import java.util.ArrayList;
 import java.util.List;
